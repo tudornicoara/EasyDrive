@@ -6,19 +6,23 @@ public static class Seed
 {
     public static async Task SeedData(DataContext context)
     {
-        var users = new List<AppUser>
+        if (!context.AppUsers.Any())
         {
-            new AppUser
+            var users = new List<AppUser>
             {
-                Name = "Ronald",
-                Surname = "McDonald",
-                Gender = "Male",
-                City = "Washington DC",
-                Country = "USA"
-            }
-        };
+                new AppUser
+                {
+                    Name = "Ronald",
+                    Surname = "McDonald",
+                    Gender = "Male",
+                    City = "Washington DC",
+                    Country = "USA",
+                    Password = "Pa$$w0rd"
+                }
+            };
 
-        await context.AppUsers.AddRangeAsync(users);
-        await context.SaveChangesAsync();
+            await context.AppUsers.AddRangeAsync(users);
+            await context.SaveChangesAsync();   
+        }
     }
 }

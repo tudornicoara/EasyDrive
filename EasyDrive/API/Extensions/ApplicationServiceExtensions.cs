@@ -16,6 +16,14 @@ public static class ApplicationServiceExtensions
         {
             opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
         });
+        
+        services.AddCors(opt =>
+        {
+            opt.AddPolicy("CorsPolicy", policy =>
+            {
+                policy.AllowAnyMethod().AllowAnyHeader().AllowCredentials().WithOrigins("http://127.0.0.1:5173");
+            });
+        });
 
         return services;
     }
