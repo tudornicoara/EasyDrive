@@ -1,5 +1,6 @@
 using API.Data;
 using API.Extensions;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,8 +33,9 @@ var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<DataContext>();
+    var mediator = services.GetRequiredService<IMediator>();
     await context.Database.MigrateAsync();
-    await Seed.SeedData(context);
+    await Seed.SeedData(context, mediator);
 }
 catch (Exception e)
 {

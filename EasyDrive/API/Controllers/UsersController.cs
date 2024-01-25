@@ -17,4 +17,16 @@ public class UsersController : BaseApiController
     {
         return HandleResult(await Mediator.Send(new Create.Command {RegisterDto = registerDto}));
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetUser(string id)
+    {
+        return HandleResult(await Mediator.Send(new Details.Command { Id = Guid.Parse(id) }));
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginDto loginDto)
+    {
+        return HandleResult(await Mediator.Send(new Login.Command {LoginDto = loginDto}));
+    }
 }

@@ -9,7 +9,10 @@ public class RegisterDto
     
     [Required]
     public string? Surname { get; set; }
-
+    
+    [Required]
+    public string? Email { get; set; }
+    
     [Required]
     public string? Gender { get; set; }
 
