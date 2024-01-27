@@ -2,8 +2,8 @@
 using System.Text;
 using API.Data;
 using API.DTOs;
-using API.Entities;
 using API.Helpers;
+using API.Interfaces;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +21,13 @@ public class Login
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly ITokenService _tokenService;
 
-        public Handler(DataContext context, IMapper mapper)
+        public Handler(DataContext context, IMapper mapper, ITokenService tokenService)
         {
             _context = context;
             _mapper = mapper;
+            _tokenService = tokenService;
         }
 
         public async Task<Result<AppUserDto>> Handle(Command request, CancellationToken cancellationToken)
@@ -53,6 +55,11 @@ public class Login
                 return Result<AppUserDto>.Failure("Unauthorized: Invalid Email");
             }
 
+            if (user.PasswordHash == null || user.PasswordSalt == null)
+            {
+                return Result<AppUserDto>.Failure("Unauthorized: Problem when checking user's password");                
+            }
+
             using var hmac = new HMACSHA512(user.PasswordSalt);
             var computedHash = hmac
                 .ComputeHash(Encoding.UTF8.GetBytes(request.LoginDto.Password));
@@ -65,7 +72,10 @@ public class Login
                 }
             }
 
-            return Result<AppUserDto>.Success(_mapper.Map<AppUserDto>(user));
+            var userDto = _mapper.Map<AppUserDto>(user);
+            userDto.Token = _tokenService.CreateToken(user);
+
+            return Result<AppUserDto>.Success(userDto);
         }
     }
 }

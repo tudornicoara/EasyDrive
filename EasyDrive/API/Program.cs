@@ -22,6 +22,9 @@ app.UseHttpsRedirection();
 
 app.UseCors("CorsPolicy");
 
+app.UseAuthentication(); // Checks for valid token
+app.UseAuthorization(); // Verifies the valid token
+
 app.UseAuthorization();
 
 app.MapControllers();

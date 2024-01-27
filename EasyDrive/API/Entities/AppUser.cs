@@ -11,6 +11,6 @@ public class AppUser
     public string? Gender { get; set; }
     public string? City { get; set; }
     public string? Country { get; set; }
-    public byte[] PasswordHash { get; set; }
-    public byte[] PasswordSalt { get; set; }
+    public byte[]? PasswordHash { get; set; }
+    public byte[]? PasswordSalt { get; set; }
 }
